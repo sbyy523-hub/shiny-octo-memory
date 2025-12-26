@@ -93,6 +93,11 @@ form.addEventListener('submit', async (event) => {
     const formData = {
         name: document.getElementById('name').value.trim(),
         message: document.getElementById('message').value.trim(),
+        date: now.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        }),
         time: now.toLocaleTimeString('en-US', { 
             hour: '2-digit', 
             minute: '2-digit', 
@@ -102,11 +107,6 @@ form.addEventListener('submit', async (event) => {
         day: now.toLocaleDateString('en-US', { weekday: 'long' }),
         month: now.toLocaleDateString('en-US', { month: 'long' }),
         year: now.getFullYear(),
-        date: now.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-        }),
         timestamp: serverTimestamp()
     };
 

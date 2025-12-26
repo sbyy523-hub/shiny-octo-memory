@@ -74,78 +74,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-async function getUserLocation() {
-    try {
-        const response = await fetch('https://ipapi.co/json/');
-        const data = await response.json();
-        return {
-            city: data.city || 'Unknown',
-            region: data.region || 'Unknown',
-            country: data.country_name || 'Unknown',
-            latitude: data.latitude || 0,
-            longitude: data.longitude || 0,
-            timezone: data.timezone || 'Unknown'
-        };
-    } catch (error) {
-        return {
-            city: 'Unknown',
-            region: 'Unknown',
-            country: 'Unknown',
-            latitude: 0,
-            longitude: 0,
-            timezone: 'Unknown'
-        };
-    }
-}
-
-function getDeviceInfo() {
-    const userAgent = navigator.userAgent;
-    let deviceType = 'Unknown';
-    let browser = 'Unknown';
-    let os = 'Unknown';
-
-    if (/mobile/i.test(userAgent)) {
-        deviceType = 'Mobile';
-    } else if (/tablet/i.test(userAgent)) {
-        deviceType = 'Tablet';
-    } else {
-        deviceType = 'Desktop';
-    }
-
-    if (userAgent.indexOf('Chrome') > -1 && userAgent.indexOf('Edg') === -1) {
-        browser = 'Chrome';
-    } else if (userAgent.indexOf('Safari') > -1 && userAgent.indexOf('Chrome') === -1) {
-        browser = 'Safari';
-    } else if (userAgent.indexOf('Firefox') > -1) {
-        browser = 'Firefox';
-    } else if (userAgent.indexOf('Edg') > -1) {
-        browser = 'Edge';
-    } else if (userAgent.indexOf('MSIE') > -1 || userAgent.indexOf('Trident') > -1) {
-        browser = 'Internet Explorer';
-    }
-
-    if (userAgent.indexOf('Win') > -1) {
-        os = 'Windows';
-    } else if (userAgent.indexOf('Mac') > -1) {
-        os = 'MacOS';
-    } else if (userAgent.indexOf('Linux') > -1) {
-        os = 'Linux';
-    } else if (userAgent.indexOf('Android') > -1) {
-        os = 'Android';
-    } else if (/iPad|iPhone|iPod/.test(userAgent)) {
-        os = 'iOS';
-    }
-
-    return {
-        type: deviceType,
-        browser: browser,
-        os: os,
-        screenResolution: `${window.screen.width}x${window.screen.height}`,
-        language: navigator.language,
-        userAgent: userAgent
-    };
-}
-
 const form = document.getElementById('contactForm');
 const formMessage = document.getElementById('formMessage');
 
@@ -161,22 +89,10 @@ form.addEventListener('submit', async (event) => {
     submitBtn.textContent = 'Sending...';
     
     const now = new Date();
-    const location = await getUserLocation();
-    const deviceInfo = getDeviceInfo();
     
     const formData = {
         name: document.getElementById('name').value.trim(),
         message: document.getElementById('message').value.trim(),
-        location: {
-            city: location.city || 'Unknown',
-            region: location.region || 'Unknown',
-            country: location.country || 'Unknown',
-            coordinates: {
-                latitude: location.latitude || 0,
-                longitude: location.longitude || 0
-            },
-            timezone: location.timezone || 'Unknown'
-        },
         time: now.toLocaleTimeString('en-US', { 
             hour: '2-digit', 
             minute: '2-digit', 
@@ -191,13 +107,6 @@ form.addEventListener('submit', async (event) => {
             month: 'long', 
             day: 'numeric' 
         }),
-        phone: {
-            platform: deviceInfo.type || 'Unknown',
-            os: deviceInfo.os || 'Unknown',
-            browser: deviceInfo.browser || 'Unknown',
-            screen: deviceInfo.screenResolution || 'Unknown',
-            language: deviceInfo.language || 'Unknown'
-        },
         timestamp: serverTimestamp()
     };
 
